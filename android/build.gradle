@@ -1,0 +1,36 @@
+// กำหนด Repositories สำหรับทุกโปรเจกต์
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+// การตั้งค่า buildscript
+buildscript {
+    repositories {
+        google()
+        jcenter() // ควรเปลี่ยน jcenter เป็น mavenCentral เนื่องจาก jcenter ถูกยกเลิกแล้ว
+    }
+    dependencies {
+        classpath 'com.google.gms.google-services:4.4.2'
+    }
+}
+
+// กำหนด build directory สำหรับ root project
+rootProject.buildDir = "../build"
+
+// กำหนด build directory สำหรับแต่ละ subproject
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+
+// จัดการการประเมินผลโปรเจกต์ย่อย
+subprojects {
+    project.evaluationDependsOn(":app")
+}
+
+// สร้าง task "clean" สำหรับลบโฟลเดอร์ build ทั้งหมด
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
